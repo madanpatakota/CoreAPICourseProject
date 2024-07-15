@@ -31,10 +31,6 @@ builder.Services.AddDbContext<ProWalksDbContext>(options =>
 });
 
 
-
-
-
-
 var app = builder.Build();
 
 

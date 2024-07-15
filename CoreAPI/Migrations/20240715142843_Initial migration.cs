@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoreAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Region",
+                name: "Regions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -25,7 +25,7 @@ namespace CoreAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Region", x => x.Id);
+                    table.PrimaryKey("PK_Regions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,9 +54,9 @@ namespace CoreAPI.Migrations
                 {
                     table.PrimaryKey("PK_Walks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Walks_Region_RegionId",
+                        name: "FK_Walks_Regions_RegionId",
                         column: x => x.RegionId,
-                        principalTable: "Region",
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -85,7 +85,7 @@ namespace CoreAPI.Migrations
                 name: "Walks");
 
             migrationBuilder.DropTable(
-                name: "Region");
+                name: "Regions");
 
             migrationBuilder.DropTable(
                 name: "WalkDifficulties");

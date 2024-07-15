@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreAPI.Migrations
 {
     [DbContext(typeof(ProWalksDbContext))]
-    [Migration("20240713052855_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20240715142843_Initial migration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,25 +53,10 @@ namespace CoreAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Region");
+                    b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("CoreAPI.Domain.WalkDifficulty", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WalkDifficulties");
-                });
-
-            modelBuilder.Entity("CoreAPI.Domain.Walks", b =>
+            modelBuilder.Entity("CoreAPI.Domain.Walk", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,7 +84,22 @@ namespace CoreAPI.Migrations
                     b.ToTable("Walks");
                 });
 
-            modelBuilder.Entity("CoreAPI.Domain.Walks", b =>
+            modelBuilder.Entity("CoreAPI.Domain.WalkDifficulty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WalkDifficulties");
+                });
+
+            modelBuilder.Entity("CoreAPI.Domain.Walk", b =>
                 {
                     b.HasOne("CoreAPI.Domain.Region", "Region")
                         .WithMany()

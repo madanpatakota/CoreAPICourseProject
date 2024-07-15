@@ -27,11 +27,11 @@ namespace CoreAPI.Data
                   // Perform the CRUD operions(Create , read , update , delete)
 
 
-        public DbSet<Region> Region { get; set; }
+        public DbSet<Region> Regions { get; set; }
 
         public DbSet<WalkDifficulty> WalkDifficulties { get; set; }
 
-        public DbSet<Walks> Walks { get; set; }
+        public DbSet<Walk> Walks { get; set; }
 
 
 
