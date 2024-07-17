@@ -38,6 +38,9 @@ namespace CoreAPI.Controllers
         public async Task<IActionResult> GetAllRegions()
         {
 
+            //from the controller
+            //please do' try to connect the databasecontext
+
             //  3 records
             var regions = await proWalksDbContext.Regions.ToListAsync();
 
