@@ -1,4 +1,5 @@
 using CoreAPI.Data;
+using CoreAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//IRegionReposity rep = new RegionRepository();
+builder.Services.AddScoped<IRegionRepository, RegionRepository>();
 
 //Access to XMLHttpRequest at 'https://localhost:7078/api/Test/GetStudents' from origin 'http://localhost:4200' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 //code setup .. allow localhost:4200 request or allow any kind of origin 

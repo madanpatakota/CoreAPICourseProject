@@ -1,6 +1,7 @@
 ﻿using CoreAPI.Data;
 using CoreAPI.Domain;
 using CoreAPI.DTOs;
+using CoreAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,12 @@ namespace CoreAPI.Controllers
     {
 
         private readonly ProWalksDbContext proWalksDbContext;
+        private readonly IRegionRepository iregionRepository;
 
-        public RegionsController(ProWalksDbContext _prowalksDbContext) {
+        public RegionsController(ProWalksDbContext _prowalksDbContext ,
+            IRegionRepository regionRepository) {
             this.proWalksDbContext = _prowalksDbContext;
+            this.iregionRepository = regionRepository;
         }
 
         // I want the data from Region which is in the database
@@ -38,14 +42,27 @@ namespace CoreAPI.Controllers
         public async Task<IActionResult> GetAllRegions()
         {
 
+
+            //1. YOu should not maintain the dbcontext directly in to the controller 
+            //    i.e. bad practice. // 1. Maintaince 2.Testability
+
+            //2. you should be communicated to the interface not the class
+
             //from the controller
             //please do' try to connect the databasecontext
-
             //  3 records
-            var regions = await proWalksDbContext.Regions.ToListAsync();
+
+            //var regions = await proWalksDbContext.Regions.ToListAsync();
+            var regions = await iregionRepository.GetAllRegions();
+
+            // i have to connect the 
 
 
-            var regionDtos = new List<RegionDTO>();
+            //IRegionReposity rep = new RegionRepository();
+            //rep.GetAllRegions();
+            
+
+                   var regionDtos = new List<RegionDTO>();
 
             foreach (var region in regions)
             {
@@ -73,14 +90,17 @@ namespace CoreAPI.Controllers
         public async Task<IActionResult> GetRegionById([FromRoute] Guid regionId)
         {
 
+            //string str = "Hellow";
+
+            //return Ok(str);
+
             //var id = regionId;
 
             //var regions =  proWalksDbContext
-             //   .Regions.Find(regionId);
-
-            var regions = await proWalksDbContext
-                .Regions.FindAsync(regionId);
-
+            //   .Regions.Find(regionId);
+            //var regions = await proWalksDbContext
+            //    .Regions.FindAsync(regionId);
+            var regions = await iregionRepository.GetRegionByID(regionId);
 
             if (regions == null)
             {
@@ -97,10 +117,6 @@ namespace CoreAPI.Controllers
             regionDto.Lat = regions.Lat;
             regionDto.population = regions.population;
             regionDto.Area = regions.Area;
-
-
-
-
 
 
             return Ok(regionDto);
@@ -130,8 +146,10 @@ namespace CoreAPI.Controllers
                 population = addRegionDto.population
             };
 
-            await proWalksDbContext.Regions.AddAsync(regionDomainModel);
-            proWalksDbContext.SaveChanges();
+            await iregionRepository.CreateRegion(regionDomainModel);
+
+            //await proWalksDbContext.Regions.AddAsync(regionDomainModel);
+            //proWalksDbContext.SaveChanges();
 
 
             //Map domain model back to the DTO
@@ -165,24 +183,22 @@ namespace CoreAPI.Controllers
              [FromRoute] Guid regionId,
              [FromBody]  UpdateRegionDto updateRegionDto)
         {
-
             var regionDomainModel = await proWalksDbContext.Regions.FindAsync(regionId);
 
-            if(regionDomainModel == null)
+            if (regionDomainModel == null)
             {
                 return NotFound();
             }
-
-            //no need the add.
-
             regionDomainModel.Code = updateRegionDto.Code;  // Siks
             regionDomainModel.population = updateRegionDto.population;
             regionDomainModel.Area = updateRegionDto.Area;
             regionDomainModel.Lat = updateRegionDto.Lat;
             regionDomainModel.Long = updateRegionDto.Long;
             regionDomainModel.Name = updateRegionDto.Name;
+            //no need the add.
 
-            proWalksDbContext.SaveChanges();
+            Region region = 
+                await iregionRepository.UpdateRegion(regionId , regionDomainModel);
 
             var regionDto = new RegionDTO
             {
@@ -207,12 +223,8 @@ namespace CoreAPI.Controllers
             {
                 return NotFound();
             }
-
-            //  proWalksDbContext.Regions.Add
-
-            proWalksDbContext.Regions.Remove(regionDomainModel);
-            proWalksDbContext.SaveChanges();
-
+            await iregionRepository.DeleteRegion(regionDomainModel);
+            //proWalksDbContext.Regions.Remove(regionDomainModel);
             var regionDto = new RegionDTO
             {
                 Id = regionDomainModel.Id,
