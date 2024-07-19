@@ -107,7 +107,6 @@ namespace CoreAPI.Controllers
                 return BadRequest();
             }
 
-
             var regionDto = new RegionDTO();
 
             regionDto.Id = regions.Id;
