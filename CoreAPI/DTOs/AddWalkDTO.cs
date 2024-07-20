@@ -1,8 +1,6 @@
-﻿using CoreAPI.Domain;
-
-namespace CoreAPI.DTOs
+﻿namespace CoreAPI.DTOs
 {
-    public class WalkDTO
+    public class AddWalkDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -11,11 +9,5 @@ namespace CoreAPI.DTOs
         public Guid RegionId { get; set; }
 
         public Guid WalkDifficultyId { get; set; }
-
-
-        public Region region { get; set; }
-        public WalkDifficulty walkDifficulty { get; set; }
-
-
     }
 }

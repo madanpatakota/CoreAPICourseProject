@@ -25,7 +25,6 @@ namespace CoreAPI.Controllers
         //GetAllWalks Information
 
         [HttpGet]
-
         public async Task<IActionResult> getAllWalks()
         {
 
@@ -55,10 +54,84 @@ namespace CoreAPI.Controllers
                     Name = walk.Name,
                     Length = walk.Length,
                     RegionId = walk.RegionId,
-                    WalkDifficultyId = walk.WalkDifficultyId
+                    WalkDifficultyId = walk.WalkDifficultyId,
+                    region = walk.Region,
+                    walkDifficulty = walk.walkDifficulty
                 });
             }
             return Ok(walkDTOs);
         }
+
+
+
+        [HttpPost]
+        //[Route("MyOwnCreateWalk")]
+        public async Task<IActionResult> CreateWalk([FromBody] AddWalkDTO addWalkDTO)
+        {
+
+            //Monitor As the backdeveloper focus on the input parameter -- completed
+
+
+            //Then pass the information to the Respective method.
+            // 1. you have to decide on which method you have to connect . You have to 
+            //  search
+
+           bool response =  await _walkRepository.CreateWalkAsync(addWalkDTO);
+
+
+            //So once you receive the informaiton from that recepecive method
+            //Incase data woul't be availeble or exceptions 
+            if (response)
+            {
+                return Ok("Success!!!! Data has inserted.");
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            //then prepare the DTO(ResponseDTO -- Take decision)
+
+
+            //Will write the Business
+
+
+        }
+
+
+
+
+        //i want to update the record based on the ID -- from address you are getting the ID
+        //you will get the record 
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateWalk([FromRoute] Guid id ,
+            [FromBody] UpdateWalkDTO updateWalkDTO)
+        {
+            //which method you have to connect
+
+            Guid responseID = await _walkRepository.UpdateWalkAsync(id, updateWalkDTO);
+            
+            if(responseID  != Guid.Empty)
+            {
+                string ouput = " Updated successfully and your id is" + responseID;
+                return Ok(ouput);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteWalk([FromRoute] Guid id)
+        {
+            //which method you have to connect
+            string response = await _walkRepository.DeleteWalkAsync(id);
+            return Ok(response);
+        }
+
     }
 }
